@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Be My Valentine? ❤️</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            text-align: center;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #ff4d6d;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .gif-container img {
+            width: clamp(200px, 50vw, 300px);
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            z-index: 20;
+        }
+
+        #yesBtn {
+            background-color: #2ecc71;
+            color: white;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        #noBtn {
+            background-color: #e74c3c;
+            color: white;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            bottom: -50px;
+            animation: floatUp linear infinite;
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 id="greeting" style="margin-bottom: 0;">Will you be my Valentine</h1>
+        <h1 id="mainText" style="margin-top: 0;">Vaishu  Baby❤️</h1>
+
+        <div class="gif-container">
+            <img id="valentineGif" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaHI5ZnpnYm4xZmdkdW1uODBiZnZxeTY3cXFteGc1em43cWM5OXh6YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gjHkRHSuHqu99y9Yjt/giphy.gif" alt="Asking GIF"/>
+        </div>
+
+        <div class="btn-group">
+            <button id="yesBtn">Yes! ❤️</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const mainText = document.getElementById('mainText');
+        const greeting = document.getElementById('greeting'); // Target the greeting
+        const gif = document.getElementById('valentineGif');
+
+        // --- 1. Floating Hearts Logic (Increased frequency for "more hearts") ---
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️'; 
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+            heart.style.fontSize = Math.random() * 20 + 15 + "px";
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+        setInterval(createHeart, 150); // Faster interval for more hearts
+
+        // --- 2. The "Unclickable No" Logic ---
+        function moveButton() {
+            const padding = 20; 
+            const maxWidth = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxHeight = window.innerHeight - noBtn.offsetHeight - padding;
+            const x = Math.max(padding, Math.floor(Math.random() * maxWidth));
+            const y = Math.max(padding, Math.floor(Math.random() * maxHeight));
+
+            noBtn.style.position = 'fixed'; 
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+        }
+
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButton();
+        });
+
+        // --- 3. The "Yes" Logic ---
+        yesBtn.addEventListener('click', () => {
+            // Hides the "Hi Vaishu Baby" text specifically
+            greeting.style.display = 'none'; 
+            
+            // mainText.innerHTML = "My heart is yours forever! ❤️<br><span class='pulse' style='font-size: 0.9em;'>Every moment with you is a dream come trueI LOVE YOU SO MUCH, VAISHU! ❤️</span>";
+            mainText.innerHTML = "My heart is yours forever! ❤️<br><span style='font-size: 0.65em; display: block; margin-top: 10px; line-height: 1.4; color: #ff3366;'>Every moment with you is a dream come true.<br>I LOVE YOU FOREVER! ❤️</span>";
+            gif.src = "https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif"; 
+
+            yesBtn.style.display = 'none';
+            noBtn.style.display = 'none';
+
+            // Initial Confetti Burst
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // Sustained Celebration Confetti
+            var duration = 5 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 10,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff4d6d', '#ffffff', '#ffdde1']
+                });
+                confetti({
+                    particleCount: 10,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff4d6d', '#ffffff', '#ffdde1']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        });
+    </script>
+</body>
+</html>
